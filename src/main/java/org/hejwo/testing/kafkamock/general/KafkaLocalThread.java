@@ -1,4 +1,4 @@
-package org.hejwo.testing.kafkamock.general.utils;
+package org.hejwo.testing.kafkamock.general;
 
 import java.util.Properties;
 

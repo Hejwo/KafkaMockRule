@@ -11,7 +11,7 @@ import static org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils.c
 
 public class ZookeeperLocalThreadTest {
 
-    public static final int ZOOKEEPER_RUNTIME = 10000;
+    private static final int ZOOKEEPER_RUNTIME = 2000;
 
     @Test
     public void shouldCreateInstanceBasedOnExternalProperties() throws InterruptedException {

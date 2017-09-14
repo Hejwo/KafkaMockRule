@@ -23,21 +23,23 @@ public class ZookeeperPropertyUtils {
     }
 
     public static Properties createDefaultZookeeperProperties(Integer port) {
-        Properties defaultProperties = createDefaultZookeeperProperties();
-        defaultProperties.setProperty("clientPort", port.toString());
-        return defaultProperties;
-    }
-
-    public static Properties createDefaultZookeeperProperties() {
         Path dataDirPath = createTempZookeeperDataDir();
 
         Properties zookeeperProps = new Properties();
         zookeeperProps.setProperty("dataDir", dataDirPath.toString());
         zookeeperProps.setProperty("tickTime", "2000");
-        zookeeperProps.setProperty("clientPort", getRandomPort().toString());
+        zookeeperProps.setProperty("clientPort", port.toString());
         zookeeperProps.setProperty("initLimit", "5");
         zookeeperProps.setProperty("syncLimit", "2");
         return zookeeperProps;
+    }
+
+    public static Properties createDefaultZookeeperProperties() {
+        return createDefaultZookeeperProperties(2181);
+    }
+
+    public static Properties createDefaultZookeeperPropertiesOnRandomPort() {
+        return createDefaultZookeeperProperties(getRandomPort());
     }
 
     private static Integer getRandomPort() {

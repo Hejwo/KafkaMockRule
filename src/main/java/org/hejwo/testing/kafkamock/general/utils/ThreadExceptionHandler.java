@@ -1,4 +1,4 @@
-package org.hejwo.testing.kafkamock.general;
+package org.hejwo.testing.kafkamock.general.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

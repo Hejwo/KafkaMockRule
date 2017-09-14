@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
-import org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

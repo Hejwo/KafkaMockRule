@@ -3,7 +3,7 @@ package org.hejwo.testing.kafkamock.rules;
 import java.util.Properties;
 
 import org.hejwo.testing.kafkamock.general.ZookeeperLocalThread;
-import org.hejwo.testing.kafkamock.general.utils.KafkaLocalThread;
+import org.hejwo.testing.kafkamock.general.KafkaLocalThread;
 import org.junit.rules.ExternalResource;
 
 import lombok.extern.slf4j.Slf4j;
