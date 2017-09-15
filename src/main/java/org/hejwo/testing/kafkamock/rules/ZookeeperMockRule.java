@@ -44,6 +44,18 @@ public class ZookeeperMockRule extends ExternalResource {
 
     @Override
     protected void after() {
-        zookeeperLocalThread.stop();
+        zookeeperLocalThread.shutdown();
+    }
+
+    public boolean isRunning() {
+        return zookeeperLocalThread.isAlive();
+    }
+
+    public int getPort() {
+        return zookeeperLocalThread.getPort();
+    }
+
+    public ZookeeperLocalThread getZookeeperLocalThread() {
+        return zookeeperLocalThread;
     }
 }

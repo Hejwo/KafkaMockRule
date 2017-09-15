@@ -5,13 +5,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class KafkaMockRuleTest {
+public class KafkaMockDefaultRuleTest {
+
+    private static final int SERVER_RUNTIME = 2000;
 
     @ClassRule
     public static KafkaMockRule kafkaMockRule = KafkaMockRule.create();
 
     @Test
     public void shouldRunKafkaAndZookeeper() throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(SERVER_RUNTIME);
     }
 }

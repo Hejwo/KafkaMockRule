@@ -24,5 +24,6 @@ public class KafkaLocalThread extends Thread {
     public void shutdown() {
         log.info("Shutting down Kafka");
         kafka.shutdown();
+        this.interrupt();
     }
 }

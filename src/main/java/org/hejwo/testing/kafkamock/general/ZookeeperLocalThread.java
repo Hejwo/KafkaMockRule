@@ -2,6 +2,7 @@ package org.hejwo.testing.kafkamock.general;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.ZooKeeperServerMain;
@@ -15,11 +16,11 @@ import static java.lang.String.format;
 public class ZookeeperLocalThread extends Thread {
 
     private final ServerConfig configuration;
-    private final ZooKeeperServerMain zookeeperServer;
+    private final ZooKeeperServeMainExtended zookeeperServer;
 
     public ZookeeperLocalThread(Properties zookeeperProperties) {
         this.configuration = prepareConfiguration(zookeeperProperties);
-        this.zookeeperServer = new ZooKeeperServerMain();
+        this.zookeeperServer = new ZooKeeperServeMainExtended();
         log.info("Created ZookeeperLocalThread with configuration : {}", zookeeperProperties.toString());
     }
 
@@ -55,6 +56,15 @@ public class ZookeeperLocalThread extends Thread {
     }
 
     public void shutdown() {
+        zookeeperServer.shutdown();
+        this.interrupt();
+    }
 
+    public ZooKeeperServeMainExtended getZookeeperServer() {
+        return zookeeperServer;
+    }
+
+    public Integer getPort() {
+        return configuration.getClientPortAddress().getPort();
     }
 }

@@ -47,8 +47,8 @@ public class KafkaMockRule extends ExternalResource {
 
     @Override
     protected void after() {
-        zookeeperLocalThread.stop();
-        kafkaLocalThread.stop();
+        zookeeperLocalThread.shutdown();
+        kafkaLocalThread.shutdown();
     }
 
 }

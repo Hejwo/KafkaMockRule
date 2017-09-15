@@ -1,4 +1,4 @@
-package org.hejwo.testing.kafkamock;
+package org.hejwo.testing.kafkamock.general;
 
 import java.nio.file.Path;
 import java.util.Properties;
@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.hejwo.testing.kafkamock.general.ZookeeperLocalThread;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils.createDefaultZookeeperProperties;
 import static org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils.createTempZookeeperDataDir;
 
@@ -26,13 +27,35 @@ public class ZookeeperLocalThreadTest {
 
         ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperProps);
         zookeeperLocalThread.start();
+
+        assertThat(zookeeperLocalThread.isAlive()).isTrue();
         Thread.sleep(ZOOKEEPER_RUNTIME);
+        zookeeperLocalThread.shutdown();
+        assertThat(zookeeperLocalThread.isAlive()).isFalse();
     }
 
     @Test
     public void shouldCreateInstanceBasedOnDefaultProperties() throws InterruptedException {
         ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(createDefaultZookeeperProperties());
         zookeeperLocalThread.start();
+
+        assertThat(zookeeperLocalThread.isAlive()).isTrue();
         Thread.sleep(ZOOKEEPER_RUNTIME);
+        zookeeperLocalThread.shutdown();
+        assertThat(zookeeperLocalThread.isAlive()).isFalse();
+    }
+
+    @Test
+    public void shouldFailLoudOnRuntime() throws InterruptedException {
+        Properties defaultZookeeperProperties = createDefaultZookeeperProperties();
+        defaultZookeeperProperties.setProperty("dataDir", "");
+
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(defaultZookeeperProperties);
+        zookeeperLocalThread.start();
+
+        assertThat(zookeeperLocalThread.isAlive()).isTrue();
+        Thread.sleep(ZOOKEEPER_RUNTIME);
+        zookeeperLocalThread.shutdown();
+        assertThat(zookeeperLocalThread.isAlive()).isFalse();
     }
 }
