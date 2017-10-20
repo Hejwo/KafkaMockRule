@@ -6,7 +6,7 @@ public class KafkaPropertyUtils {
 
     public static Properties createDefaultKafkaProperties() {
         Properties properties = new Properties();
-        properties.setProperty("zookeeper.connect", "");
+        properties.setProperty("zookeeper.connect", "localhost:2181");
         return properties;
     }
 }

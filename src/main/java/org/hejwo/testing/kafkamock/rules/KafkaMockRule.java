@@ -37,18 +37,23 @@ public class KafkaMockRule extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        if(!zookeeperLocalThread.isAlive()) {
-            zookeeperLocalThread.start();
-        }
-        if(!kafkaLocalThread.isAlive()) {
-            kafkaLocalThread.start();
-        }
+        zookeeperLocalThread.start();
+        Thread.sleep(1000);
+        kafkaLocalThread.run();
     }
 
     @Override
     protected void after() {
         zookeeperLocalThread.shutdown();
         kafkaLocalThread.shutdown();
+    }
+
+    public boolean isZookeeperRunning() {
+        return zookeeperLocalThread.isAlive();
+    }
+
+    public boolean isKafkaRunning() {
+        return kafkaLocalThread.isAlive();
     }
 
 }

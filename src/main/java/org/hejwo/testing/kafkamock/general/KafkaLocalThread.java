@@ -17,8 +17,12 @@ public class KafkaLocalThread extends Thread {
 
     @Override
     public void run() {
-        log.info("Starting kafka");
-        kafka.startup();
+        try {
+            log.info("Starting kafka");
+            kafka.startup();
+        } catch(Throwable ex) {
+            log.error("Error while starting !!!", ex);
+        }
     }
 
     public void shutdown() {
