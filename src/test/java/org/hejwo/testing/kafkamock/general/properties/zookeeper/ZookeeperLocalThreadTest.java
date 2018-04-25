@@ -1,31 +1,29 @@
-package org.hejwo.testing.kafkamock.general;
+package org.hejwo.testing.kafkamock.general.properties.zookeeper;
 
 import java.nio.file.Path;
-import java.util.Properties;
 
 import org.hejwo.testing.kafkamock.general.ZookeeperLocalThread;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils.createDefaultZookeeperProperties;
-import static org.hejwo.testing.kafkamock.general.utils.ZookeeperPropertyUtils.createTempZookeeperDataDir;
+import static org.hejwo.testing.kafkamock.TestUtils.TEST_TIMEOUT;
 
 public class ZookeeperLocalThreadTest {
 
     private static final int ZOOKEEPER_RUNTIME = 2000;
 
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldCreateInstanceBasedOnExternalProperties() throws InterruptedException {
-        Path dataDirPath = createTempZookeeperDataDir();
+        Path dataDirPath = ZookeeperPropertyUtils.createTempZookeeperDataDir();
 
-        Properties zookeeperProps = new Properties();
-        zookeeperProps.setProperty("dataDir", dataDirPath.toString());
-        zookeeperProps.setProperty("tickTime", "2000");
-        zookeeperProps.setProperty("clientPort", "2181");
-        zookeeperProps.setProperty("initLimit", "5");
-        zookeeperProps.setProperty("syncLimit", "2");
+        ZookeeperPropertiesBuilder zookeeperPropertiesBuilder = ZookeeperPropertiesBuilder.create()
+            .dataDir(dataDirPath.toString())
+            .tickTime(2000L)
+            .clientPort(2181)
+            .initLimit(5)
+            .syncLimit(2);
 
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperProps);
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropertiesBuilder);
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();
@@ -34,9 +32,9 @@ public class ZookeeperLocalThreadTest {
         assertThat(zookeeperLocalThread.isAlive()).isFalse();
     }
 
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldCreateInstanceBasedOnDefaultProperties() throws InterruptedException {
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(createDefaultZookeeperProperties());
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(ZookeeperPropertiesBuilder.buildDefault());
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();
@@ -45,12 +43,12 @@ public class ZookeeperLocalThreadTest {
         assertThat(zookeeperLocalThread.isAlive()).isFalse();
     }
 
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldFailLoudOnRuntime() throws InterruptedException {
-        Properties defaultZookeeperProperties = createDefaultZookeeperProperties();
-        defaultZookeeperProperties.setProperty("dataDir", "");
+        ZookeeperPropertiesBuilder zookeeperPropertiesBuilder = ZookeeperPropertiesBuilder.buildDefault()
+            .dataDir(" ");
 
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(defaultZookeeperProperties);
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropertiesBuilder);
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();

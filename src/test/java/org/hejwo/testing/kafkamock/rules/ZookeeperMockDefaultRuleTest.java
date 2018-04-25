@@ -1,11 +1,10 @@
 package org.hejwo.testing.kafkamock.rules;
 
-import org.hejwo.testing.kafkamock.general.ZookeeperLocalThread;
-import org.junit.After;
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hejwo.testing.kafkamock.TestUtils.TEST_TIMEOUT;
 import static org.hejwo.testing.kafkamock.TestUtils.isPortAvailable;
 
 public class ZookeeperMockDefaultRuleTest {
@@ -15,7 +14,7 @@ public class ZookeeperMockDefaultRuleTest {
     @ClassRule
     public static ZookeeperMockRule zookeeperMockRule = ZookeeperMockRule.create();
 
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldRunZookeeperMock() throws Exception {
 
         assertThat(zookeeperMockRule.isRunning()).isTrue();

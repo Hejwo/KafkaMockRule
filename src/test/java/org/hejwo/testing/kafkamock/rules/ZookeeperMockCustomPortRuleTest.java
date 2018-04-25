@@ -1,12 +1,10 @@
 package org.hejwo.testing.kafkamock.rules;
 
-import java.io.IOException;
-import java.net.Socket;
-
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hejwo.testing.kafkamock.TestUtils.TEST_TIMEOUT;
 import static org.hejwo.testing.kafkamock.TestUtils.isPortAvailable;
 
 public class ZookeeperMockCustomPortRuleTest {
@@ -17,7 +15,7 @@ public class ZookeeperMockCustomPortRuleTest {
     @ClassRule
     public static ZookeeperMockRule zookeeperMockRule = ZookeeperMockRule.create(CUSTOM_PORT);
 
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldRunZookeeperMock() throws Exception {
         assertThat(zookeeperMockRule.isRunning()).isTrue();
         Thread.sleep(SERVER_RUNTIME);

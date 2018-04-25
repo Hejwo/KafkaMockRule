@@ -2,11 +2,10 @@ package org.hejwo.testing.kafkamock.general;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.zookeeper.server.ServerConfig;
-import org.apache.zookeeper.server.ZooKeeperServerMain;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
+import org.hejwo.testing.kafkamock.general.properties.zookeeper.ZookeeperPropertiesBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,11 +16,13 @@ public class ZookeeperLocalThread extends Thread {
 
     private final ServerConfig configuration;
     private final ZooKeeperServeMainExtended zookeeperServer;
+    private final ZookeeperPropertiesBuilder zookeeperPropertiesBuilder;
 
-    public ZookeeperLocalThread(Properties zookeeperProperties) {
-        this.configuration = prepareConfiguration(zookeeperProperties);
+    public ZookeeperLocalThread(ZookeeperPropertiesBuilder zookeeperPropertiesBuilder) {
+        this.setName("KafkaMockRule-ZookeeperThread");
+        this.zookeeperPropertiesBuilder = zookeeperPropertiesBuilder;
+        this.configuration = prepareConfiguration(zookeeperPropertiesBuilder.toProps());
         this.zookeeperServer = new ZooKeeperServeMainExtended();
-        log.info("Created ZookeeperLocalThread with configuration : {}", zookeeperProperties.toString());
     }
 
     private ServerConfig prepareConfiguration(Properties zookeeperProperties) {
@@ -53,6 +54,10 @@ public class ZookeeperLocalThread extends Thread {
         } catch (IOException e) {
             throw new RuntimeException("Failed to start Zookeeper", e);
         }
+    }
+
+    public ZookeeperPropertiesBuilder getZookeeperPropertiesBuilder() {
+        return zookeeperPropertiesBuilder;
     }
 
     public void shutdown() {
