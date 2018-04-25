@@ -1,6 +1,6 @@
 package org.hejwo.testing.kafkamock.general;
 
-import java.util.Properties;
+import org.hejwo.testing.kafkamock.general.properties.kafka.KafkaPropsBuilder;
 
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServerStartable;
@@ -10,10 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaLocalThread extends Thread {
 
     private final KafkaServerStartable kafka;
+    private final KafkaPropsBuilder kafkaPropsBuilder;
 
-    public KafkaLocalThread(Properties kafkaProperties) {
+    public KafkaLocalThread(KafkaPropsBuilder kafkaPropsBuilder) {
         this.setName("KafkaMockRule-KafkaThread");
-        this.kafka = new KafkaServerStartable(new KafkaConfig(kafkaProperties));
+        this.kafkaPropsBuilder = kafkaPropsBuilder;
+        this.kafka = new KafkaServerStartable(new KafkaConfig(kafkaPropsBuilder.toProps()));
     }
 
     @Override

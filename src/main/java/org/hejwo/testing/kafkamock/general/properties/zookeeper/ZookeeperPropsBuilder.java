@@ -4,31 +4,31 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 
-public class ZookeeperPropertiesBuilder {
+public class ZookeeperPropsBuilder {
 
-    Properties props = new Properties();
+    private Properties props = new Properties();
 
-    public ZookeeperPropertiesBuilder tickTime(Long tickTimeMs) {
+    public ZookeeperPropsBuilder tickTime(Long tickTimeMs) {
         props.setProperty("tickTime", tickTimeMs.toString());
         return this;
     }
 
-    public ZookeeperPropertiesBuilder clientPort(Integer clientPort) {
+    public ZookeeperPropsBuilder clientPort(Integer clientPort) {
         props.setProperty("clientPort", clientPort.toString());
         return this;
     }
 
-    public ZookeeperPropertiesBuilder initLimit(Integer initLimit) {
+    public ZookeeperPropsBuilder initLimit(Integer initLimit) {
         props.setProperty("initLimit", initLimit.toString());
         return this;
     }
 
-    public ZookeeperPropertiesBuilder syncLimit(Integer syncLimit) {
+    public ZookeeperPropsBuilder syncLimit(Integer syncLimit) {
         props.setProperty("syncLimit", syncLimit.toString());
         return this;
     }
 
-    public ZookeeperPropertiesBuilder dataDir(String dataDir) {
+    public ZookeeperPropsBuilder dataDir(String dataDir) {
         props.setProperty("dataDir", dataDir);
         return this;
     }
@@ -37,13 +37,13 @@ public class ZookeeperPropertiesBuilder {
         return props;
     }
 
-    public static ZookeeperPropertiesBuilder create() {
-        return new ZookeeperPropertiesBuilder();
+    public static ZookeeperPropsBuilder create() {
+        return new ZookeeperPropsBuilder();
     }
 
-    public static ZookeeperPropertiesBuilder buildDefault(Integer port) {
+    public static ZookeeperPropsBuilder buildDefault(Integer port) {
         Path dataDirPath = ZookeeperPropertyUtils.createTempZookeeperDataDir();
-        return new ZookeeperPropertiesBuilder().
+        return new ZookeeperPropsBuilder().
             dataDir(dataDirPath.toString()).
             tickTime(2000L).
             clientPort(port).
@@ -51,12 +51,12 @@ public class ZookeeperPropertiesBuilder {
             syncLimit(2);
     }
 
-    public static ZookeeperPropertiesBuilder buildDefaultOnRandomPort() {
+    public static ZookeeperPropsBuilder buildDefaultOnRandomPort() {
         Integer randomPort = ZookeeperPropertyUtils.getRandomPort();
         return buildDefault(randomPort);
     }
 
-    public static ZookeeperPropertiesBuilder buildDefault() {
+    public static ZookeeperPropsBuilder buildDefault() {
         return buildDefault(2181);
     }
 
@@ -67,8 +67,8 @@ public class ZookeeperPropertiesBuilder {
         return properties;
     }
 
-    public static ZookeeperPropertiesBuilder buildWithCustomOnly(Properties customProps) {
-        ZookeeperPropertiesBuilder builder = new ZookeeperPropertiesBuilder();
+    public static ZookeeperPropsBuilder buildWithCustomOnly(Properties customProps) {
+        ZookeeperPropsBuilder builder = new ZookeeperPropsBuilder();
         builder.props = customProps;
         return builder;
     }

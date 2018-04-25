@@ -16,14 +16,14 @@ public class ZookeeperLocalThreadTest {
     public void shouldCreateInstanceBasedOnExternalProperties() throws InterruptedException {
         Path dataDirPath = ZookeeperPropertyUtils.createTempZookeeperDataDir();
 
-        ZookeeperPropertiesBuilder zookeeperPropertiesBuilder = ZookeeperPropertiesBuilder.create()
+        ZookeeperPropsBuilder zookeeperPropsBuilder = ZookeeperPropsBuilder.create()
             .dataDir(dataDirPath.toString())
             .tickTime(2000L)
             .clientPort(2181)
             .initLimit(5)
             .syncLimit(2);
 
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropertiesBuilder);
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropsBuilder);
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();
@@ -34,7 +34,7 @@ public class ZookeeperLocalThreadTest {
 
     @Test(timeout = TEST_TIMEOUT)
     public void shouldCreateInstanceBasedOnDefaultProperties() throws InterruptedException {
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(ZookeeperPropertiesBuilder.buildDefault());
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(ZookeeperPropsBuilder.buildDefault());
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();
@@ -45,10 +45,10 @@ public class ZookeeperLocalThreadTest {
 
     @Test(timeout = TEST_TIMEOUT)
     public void shouldFailLoudOnRuntime() throws InterruptedException {
-        ZookeeperPropertiesBuilder zookeeperPropertiesBuilder = ZookeeperPropertiesBuilder.buildDefault()
+        ZookeeperPropsBuilder zookeeperPropsBuilder = ZookeeperPropsBuilder.buildDefault()
             .dataDir(" ");
 
-        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropertiesBuilder);
+        ZookeeperLocalThread zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropsBuilder);
         zookeeperLocalThread.start();
 
         assertThat(zookeeperLocalThread.isAlive()).isTrue();

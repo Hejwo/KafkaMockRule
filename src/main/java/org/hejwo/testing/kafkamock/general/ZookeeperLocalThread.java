@@ -5,7 +5,7 @@ import java.util.Properties;
 
 import org.apache.zookeeper.server.ServerConfig;
 import org.apache.zookeeper.server.quorum.QuorumPeerConfig;
-import org.hejwo.testing.kafkamock.general.properties.zookeeper.ZookeeperPropertiesBuilder;
+import org.hejwo.testing.kafkamock.general.properties.zookeeper.ZookeeperPropsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,12 +16,12 @@ public class ZookeeperLocalThread extends Thread {
 
     private final ServerConfig configuration;
     private final ZooKeeperServeMainExtended zookeeperServer;
-    private final ZookeeperPropertiesBuilder zookeeperPropertiesBuilder;
+    private final ZookeeperPropsBuilder zookeeperPropsBuilder;
 
-    public ZookeeperLocalThread(ZookeeperPropertiesBuilder zookeeperPropertiesBuilder) {
+    public ZookeeperLocalThread(ZookeeperPropsBuilder zookeeperPropsBuilder) {
         this.setName("KafkaMockRule-ZookeeperThread");
-        this.zookeeperPropertiesBuilder = zookeeperPropertiesBuilder;
-        this.configuration = prepareConfiguration(zookeeperPropertiesBuilder.toProps());
+        this.zookeeperPropsBuilder = zookeeperPropsBuilder;
+        this.configuration = prepareConfiguration(zookeeperPropsBuilder.toProps());
         this.zookeeperServer = new ZooKeeperServeMainExtended();
     }
 
@@ -56,8 +56,8 @@ public class ZookeeperLocalThread extends Thread {
         }
     }
 
-    public ZookeeperPropertiesBuilder getZookeeperPropertiesBuilder() {
-        return zookeeperPropertiesBuilder;
+    public ZookeeperPropsBuilder getZookeeperPropsBuilder() {
+        return zookeeperPropsBuilder;
     }
 
     public void shutdown() {

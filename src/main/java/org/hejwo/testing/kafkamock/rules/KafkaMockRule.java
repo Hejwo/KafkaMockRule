@@ -1,6 +1,5 @@
 package org.hejwo.testing.kafkamock.rules;
 
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
@@ -8,12 +7,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.hejwo.testing.kafkamock.general.KafkaLocalThread;
 import org.hejwo.testing.kafkamock.general.ZookeeperLocalThread;
-import org.hejwo.testing.kafkamock.general.properties.zookeeper.ZookeeperPropertiesBuilder;
+import org.hejwo.testing.kafkamock.general.properties.kafka.KafkaPropsBuilder;
+import org.hejwo.testing.kafkamock.general.properties.zookeeper.ZookeeperPropsBuilder;
 import org.junit.rules.ExternalResource;
 
 import lombok.extern.slf4j.Slf4j;
 
-import static org.hejwo.testing.kafkamock.general.utils.KafkaPropertyUtils.createDefaultKafkaProperties;
 
 @Slf4j
 public class KafkaMockRule extends ExternalResource {
@@ -29,28 +28,28 @@ public class KafkaMockRule extends ExternalResource {
     private Future<?> zookeeperTask;
     private Future<?> kafkaTask;
 
-    public static KafkaMockRule create(Properties kafkaProperties, ZookeeperPropertiesBuilder zookeeperPropBuilder) {
-        return new KafkaMockRule(kafkaProperties, zookeeperPropBuilder, DEFAULT_START_TIME_MS);
+    public static KafkaMockRule create(KafkaPropsBuilder kafkaPropsBuilder, ZookeeperPropsBuilder zookeeperPropBuilder) {
+        return new KafkaMockRule(kafkaPropsBuilder, zookeeperPropBuilder, DEFAULT_START_TIME_MS);
     }
 
-    public static KafkaMockRule create(Properties kafkaProperties) {
+    public static KafkaMockRule create(KafkaPropsBuilder kafkaPropsBuilder) {
         log.debug("Created default Zookeeper rule");
-        return new KafkaMockRule(kafkaProperties, ZookeeperPropertiesBuilder.buildDefault(), DEFAULT_START_TIME_MS);
+        return new KafkaMockRule(kafkaPropsBuilder, ZookeeperPropsBuilder.buildDefault(), DEFAULT_START_TIME_MS);
     }
 
     public static KafkaMockRule create() {
-        return new KafkaMockRule(createDefaultKafkaProperties(), ZookeeperPropertiesBuilder.buildDefault(), DEFAULT_START_TIME_MS);
+        return new KafkaMockRule(KafkaPropsBuilder.buildDefault(), ZookeeperPropsBuilder.buildDefault(), DEFAULT_START_TIME_MS);
     }
 
     public static KafkaMockRule create(long startupTimeMs) {
-        return new KafkaMockRule(createDefaultKafkaProperties(), ZookeeperPropertiesBuilder.buildDefault(), startupTimeMs);
+        return new KafkaMockRule(KafkaPropsBuilder.buildDefault(), ZookeeperPropsBuilder.buildDefault(), startupTimeMs);
     }
 
-    private KafkaMockRule(Properties kafkaProperties, ZookeeperPropertiesBuilder zookeeperPropBuilder, long startTime) {
+    private KafkaMockRule(KafkaPropsBuilder kafkaPropBuilder, ZookeeperPropsBuilder zookeeperPropBuilder, long startTime) {
         executor = new ForkJoinPool();
 
         this.zookeeperLocalThread = new ZookeeperLocalThread(zookeeperPropBuilder);
-        this.kafkaLocalThread = new KafkaLocalThread(kafkaProperties);
+        this.kafkaLocalThread = new KafkaLocalThread(kafkaPropBuilder);
         this.startTime = startTime;
     }
 
@@ -62,7 +61,7 @@ public class KafkaMockRule extends ExternalResource {
     protected void before() throws Throwable {
         zookeeperTask = executor.submit(zookeeperLocalThread);
         kafkaTask = executor.submit(kafkaLocalThread);
-        Thread.sleep(1000);
+        Thread.sleep(startTime);
     }
 
     @Override
