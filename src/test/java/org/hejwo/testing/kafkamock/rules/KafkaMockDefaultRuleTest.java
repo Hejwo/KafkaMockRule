@@ -1,19 +1,19 @@
 package org.hejwo.testing.kafkamock.rules;
 
-import java.util.Properties;
-
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hejwo.testing.kafkamock.TestUtils.TEST_TIMEOUT;
 
-//@Ignore
 public class KafkaMockDefaultRuleTest {
 
     private static final int SERVER_RUNTIME = 6000;
@@ -21,31 +21,18 @@ public class KafkaMockDefaultRuleTest {
     @ClassRule
     public static KafkaMockRule kafkaMockRule = KafkaMockRule.create();
 
-    //    @Test(timeout = TEST_TIMEOUT)
-    @Test
+    @Test(timeout = TEST_TIMEOUT)
     public void shouldRunKafkaAndZookeeper() throws InterruptedException {
-        Properties properties = createKafkaProducerProperties();
+        Producer<String, String> producer = kafkaMockRule.helper().createProducer(StringSerializer.class, StringSerializer.class, "test1");
+        ProducerRecord<String, String> testRecord = new ProducerRecord<>("test1", "testRecord !!!");
+        producer.send(testRecord, createValidatingCallback("test1"));
 
-        KafkaProducer<String, String> producer = new KafkaProducer<>(properties);
-        ProducerRecord<String, String> whatsup = new ProducerRecord<>("test1", "testRecord !!!");
+        Consumer<String, String> consumer = kafkaMockRule.helper()
+            .createConsumer(StringDeserializer.class, StringDeserializer.class, "test1", "group1");
 
-        producer.send(whatsup, createValidatingCallback("test1"));
+        ConsumerRecords<String, String> poll = consumer.poll(1000);
 
-        ConsumerRecords<String, String> records = kafkaMockRule.lookup().poolRecords();
-
-
-    }
-
-    private Properties createKafkaProducerProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
-        properties.setProperty("key.serializer", StringSerializer.class.getName());
-        properties.setProperty("value.serializer", StringSerializer.class.getName());
-        properties.setProperty("topic.name", "test1");
-        properties.setProperty("acks", "1"); // Matching default
-        properties.setProperty("retries", "0");
-        properties.setProperty("timeout.ms", "1500");
-        return properties;
+        System.out.println(poll);
     }
 
     private Callback createValidatingCallback(final String topicName) {

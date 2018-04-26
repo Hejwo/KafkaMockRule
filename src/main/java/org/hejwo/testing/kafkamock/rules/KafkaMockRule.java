@@ -33,7 +33,6 @@ public class KafkaMockRule extends ExternalResource {
     }
 
     public static KafkaMockRule create(KafkaPropsBuilder kafkaPropsBuilder) {
-        log.debug("Created default Zookeeper rule");
         return new KafkaMockRule(kafkaPropsBuilder, ZookeeperPropsBuilder.buildDefault(), DEFAULT_START_TIME_MS);
     }
 
@@ -53,8 +52,8 @@ public class KafkaMockRule extends ExternalResource {
         this.startTime = startTime;
     }
 
-    public KafkaLookup lookup() {
-        return new KafkaLookup();
+    public KafkaHelper helper() {
+        return new KafkaHelper(kafkaLocalThread.getKafkaPropsBuilder());
     }
 
     @Override

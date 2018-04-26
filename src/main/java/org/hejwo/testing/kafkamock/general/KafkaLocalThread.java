@@ -18,6 +18,10 @@ public class KafkaLocalThread extends Thread {
         this.kafka = new KafkaServerStartable(new KafkaConfig(kafkaPropsBuilder.toProps()));
     }
 
+    public KafkaPropsBuilder getKafkaPropsBuilder() {
+        return kafkaPropsBuilder;
+    }
+
     @Override
     public void run() {
         try {
