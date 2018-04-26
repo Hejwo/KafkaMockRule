@@ -51,6 +51,7 @@ public class ZookeeperLocalThread extends Thread {
             log.info("Starting Zookeeper");
             log.debug("Zookeeper serverConfig: {{}}", zookeeperConfigToString(configuration));
             zookeeperServer.runFromConfig(configuration);
+            System.out.println("bbb");
         } catch (IOException e) {
             throw new RuntimeException("Failed to start Zookeeper", e);
         }
@@ -63,6 +64,7 @@ public class ZookeeperLocalThread extends Thread {
     public void shutdown() {
         zookeeperServer.shutdown();
         this.interrupt();
+        // this delete /tmp/zookeeper
     }
 
     public ZooKeeperServeMainExtended getZookeeperServer() {

@@ -27,6 +27,7 @@ public class KafkaLocalThread extends Thread {
         try {
             log.info("Starting kafka");
             kafka.startup();
+            System.out.println("aaa");
         } catch(Throwable ex) {
             log.error("Error while starting !!!", ex);
         }
@@ -35,5 +36,7 @@ public class KafkaLocalThread extends Thread {
     public void shutdown() {
         log.info("Shutting down Kafka");
         kafka.shutdown();
+        // delete /tmp/   log.dirs=/tmp/kafka-logs
+        // dataDir=/tmp/zookeeper
     }
 }

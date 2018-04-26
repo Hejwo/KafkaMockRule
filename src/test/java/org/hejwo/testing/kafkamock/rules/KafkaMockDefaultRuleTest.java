@@ -29,10 +29,9 @@ public class KafkaMockDefaultRuleTest {
 
         Consumer<String, String> consumer = kafkaMockRule.helper()
             .createConsumer(StringDeserializer.class, StringDeserializer.class, "test1", "group1");
+        ConsumerRecords<String, String> records = consumer.poll(1000);
 
-        ConsumerRecords<String, String> poll = consumer.poll(1000);
-
-        System.out.println(poll);
+        assertThat(records.count()).isEqualTo(1);
     }
 
     private Callback createValidatingCallback(final String topicName) {
